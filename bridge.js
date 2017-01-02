@@ -3,6 +3,8 @@ var osc = require('node-osc'),
 
 var oscServer, oscClient;
 
+var spotify = require('spotify-node-applescript');
+
 io.sockets.on('connection', function (socket) {
   socket.on("config", function (obj) {
     oscServer = new osc.Server(obj.server.port, obj.server.host);
@@ -12,6 +14,16 @@ io.sockets.on('connection', function (socket) {
 
     oscServer.on('message', function(msg, rinfo) {
       console.log(msg, rinfo);
+
+      if(msg[0] == "/output_1"){
+        spotify.playPause(function(err, state){});
+      }
+      // else if(msg[0] == "/output_2"){
+      //   spotify.previous(function(err, state){});
+      // }
+      else if(msg[0] == "/output_2"){
+        spotify.next(function(err, state){});
+      }
       socket.emit("message", msg);
     });
   });
